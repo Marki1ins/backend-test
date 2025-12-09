@@ -3,6 +3,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PrismaService } from "../../db/prisma.service";
 
 import { NewsService } from "./news.service";
+import { InMemoryQueue } from "../../shared/queue/in-memory.queue";
+import { InMemoryCache } from "../../shared/cache/in-memory.cache";
 
 describe("NewsService", () => {
   let service: NewsService;
@@ -21,12 +23,29 @@ describe("NewsService", () => {
   } as any;
 
   beforeEach(async () => {
+    const queueMock = {
+      add: jest.fn(),
+    };
+    const cacheMock = {
+      get: jest.fn(),
+      set: jest.fn(),
+      del: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NewsService,
         {
           provide: PrismaService,
           useValue: prismaMock,
+        },
+        {
+          provide: InMemoryQueue,
+          useValue: queueMock,
+        },
+        {
+          provide: InMemoryCache,
+          useValue: cacheMock,
         },
       ],
     }).compile();
@@ -49,6 +68,36 @@ describe("NewsService", () => {
 
     expect(result).toEqual(mockNoticia);
     expect(prismaMock.noticia.create).toHaveBeenCalledWith({ data: payload });
+  });
+
+  it("should add a job to queue after creating news", async () => {
+    const queue = {
+      add: jest.fn(),
+    };
+
+    const cacheMock = {
+      get: jest.fn(),
+      set: jest.fn(),
+      del: jest.fn(),
+    };
+
+    const prismaMock = {
+      noticia: {
+        create: jest.fn().mockResolvedValue(mockNoticia),
+      },
+    };
+
+    const service = new NewsService(prismaMock as any, queue as any, cacheMock as any);
+
+    const payload = { titulo: "Nova notícia", descricao: "Desc" };
+
+    const result = await service.create(payload);
+
+    expect(result).toEqual(mockNoticia);
+    expect(queue.add).toHaveBeenCalledWith({
+      type: "NOTIFY_NEW_NEWS",
+      payload: mockNoticia,
+    });
   });
 
   it("should list all news (paginated)", async () => {
