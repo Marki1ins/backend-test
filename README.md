@@ -26,8 +26,8 @@ Docker - Containerização para execução da aplicação em diferentes ambiente
 Clone este repositório para sua máquina local:
 
 ```bash
-git clone https://github.com/Marki1ins/g4f-mre-back-end-test.git
-cd g4f-mre-back-end-test
+git clone https://github.com/Marki1ins/backend-test.git
+cd backend-test
 ```
 
 ### Passo 2: Subir os containers Docker
