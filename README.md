@@ -1,39 +1,54 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend - NestJS + TypeScript + Prisma + Docker
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Desenvolvimento de uma API RESTful para gerenciar uma entidade chamada "Noticia". A API deve permitir a criação, listagem, atualização e exclusão de notícias.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologias Utilizadas
+
+Node.js - Ambiente de execução JavaScript.
+NestJS - Framework para construir aplicações escaláveis com Node.js.
+TypeScript - Linguagem fortemente tipada para JavaScript.
+Docker - Containerização para execução da aplicação em diferentes ambientes.
 
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+## Pré-requisitos
+
+- **Docker**: Certifique-se de que o Docker está instalado e funcionando corretamente. Você pode baixar o Docker Desktop para Windows [aqui](https://www.docker.com/products/docker-desktop).
+
+- **Docker Compose**: Necessário para orquestrar múltiplos containers. Caso não tenha o Docker Compose instalado, ele geralmente vem com o Docker Desktop. Caso contrário, siga [essas instruções](https://docs.docker.com/compose/install/) para instalação.
+
+## Rodando o Projeto Localmente
+
+### Passo 1: Clonar o repositório
+
+Clone este repositório para sua máquina local:
 
 ```bash
-$ npm install
+git clone https://github.com/Marki1ins/g4f-mre-back-end-test.git
+cd g4f-mre-back-end-test
 ```
 
-## Compile and run the project
+### Passo 2: Subir os containers Docker
+
+Execute o comando abaixo para construir e rodar os containers Docker:
 
 ```bash
+docker-compose up --build
+```
+
+Isso vai iniciar dois containers:
+- Um para o backend rodando na porta `3000`.
+- Outro para o prisma.
+
+## Scripts de Desenvolvimento
+
+Se você preferir rodar o projeto localmente sem Docker, o seu [NodeJS](https://nodejs.org/pt/download) precisa está na versão `22.18.0`. Então, pode usar o seguintes scripts:
+
+```bash
+npm install
+
 # development
 $ npm run start
 
@@ -44,54 +59,35 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+A API estará disponível em `http://localhost:3000`
+
+---
+
+## Testes
+
+### Rodando os testes
 
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Deployment
+Este comando irá executar os testes automatizados configurados no projeto, garantindo que o comportamento esperado do sistema seja validado.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```plaintext
+src/
+├── news/
+│   ├── noticias.controller.ts  # Controlador para as rotas de "noticias"
+│   ├── noticias.service.ts     # Serviço que contém a lógica de negócios
+│   ├── noticias.module.ts      # Módulo que agrupa tudo relacionado à "noticia"
+└── app.module.ts               # Módulo raiz da aplicação
 ```
+### Justificativa da Estrutura de Pastas:
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+O módulo noticias agrupa todos os arquivos relacionados à entidade "Noticia", como o controlador e o serviço.
+O arquivo app.module.ts serve como o módulo principal, onde todos os módulos da aplicação são importados.
 
 ## License
 

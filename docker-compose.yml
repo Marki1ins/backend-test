@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - prisma 
+    environment:
+      - DATABASE_URL="sqlite:/app/prisma/dev.db"
+
+  prisma:
+    build:
+      context: .
+      dockerfile: prisma/Dockerfile
+    container_name: prisma-db
+    volumes:
+      - ./prisma:/app/prisma
+    ports:
+      - "5432:5432"
+    environment:
+      - DATABASE_URL="sqlite:/app/prisma/dev.db"
+    command: ["prisma", "generate"]
