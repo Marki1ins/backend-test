@@ -1,25 +1,38 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../db/prisma.service';
+import { PaginationDto } from 'src/shared/utils/pagination.dto';
 
-import { CreateOrUpdateRoomDto } from './news.dto';
+import { PrismaService } from '../../db/prisma.service';
+import { CreateOrUpdateNewsDto } from './news.dto';
 
 @Injectable()
 export class NewsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateOrUpdateRoomDto) {
+  async create(data: CreateOrUpdateNewsDto) {
     return await this.prisma.noticia.create({ data });
   }
 
-  async listAll() {
-    return (await this.prisma.noticia.findMany()) || [];
+  async listAll(query: PaginationDto) {
+    const { page, perPage, sortKey, sortDirection, search } = query as any;
+    return (await this.prisma.paginate({
+      modelName: 'Noticia',
+      where: {
+        ...(search && {
+          titulo: { contains: search },
+        })
+      },
+      page,
+      perPage,
+      sortKey,
+      sortDirection,
+    })) || [];
   }
 
   async listById(id: number) {
     return await this.hasNoticia(id);
   }
 
-  async update(id: number, data: CreateOrUpdateRoomDto) {
+  async update(id: number, data: CreateOrUpdateNewsDto) {
     await this.hasNoticia(id);
     return await this.prisma.noticia.update({ where: { id }, data });
   }

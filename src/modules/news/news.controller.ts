@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CreateOrUpdateRoomDto } from './news.dto';
+import { PaginationDto } from '../../shared/utils/pagination.dto';
+import { CreateOrUpdateNewsDto } from './news.dto';
 import { NewsService } from './news.service';
 
 @ApiTags("noticia")
@@ -10,18 +11,18 @@ export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @ApiOperation({ summary: "Criar uma notícia" })
-  @ApiBody({ type: CreateOrUpdateRoomDto })
-  @ApiResponse({ status: HttpStatus.CREATED, type: CreateOrUpdateRoomDto })
+  @ApiBody({ type: CreateOrUpdateNewsDto })
+  @ApiResponse({ status: HttpStatus.CREATED, type: CreateOrUpdateNewsDto })
   @Post("/")
-  async create(@Body() payload: CreateOrUpdateRoomDto) {
+  async create(@Body() payload: CreateOrUpdateNewsDto) {
     return await this.newsService.create(payload);
   }
 
   @ApiOperation({ summary: "Listar todas as notícias" })
-  @ApiResponse({ status: HttpStatus.OK, type: [CreateOrUpdateRoomDto] })
+  @ApiResponse({ status: HttpStatus.OK, type: [CreateOrUpdateNewsDto] })
   @Get("/")
-  async listAll() {
-    return await this.newsService.listAll();
+  async listAll(@Query() query: PaginationDto) {
+    return await this.newsService.listAll(query);
   }
 
   @ApiOperation({ summary: "Listar uma noticia" })
@@ -32,7 +33,7 @@ export class NewsController {
     example: "1",
     required: true,
   })
-  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateRoomDto })
+  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateNewsDto })
   @Get("/:id")
   async listById(@Param("id") id: string) {
     return await this.newsService.listById(Number(id));
@@ -46,11 +47,11 @@ export class NewsController {
     example: "1",
     required: true,
   })
-  @ApiBody({ type: CreateOrUpdateRoomDto })
-  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateRoomDto })
+  @ApiBody({ type: CreateOrUpdateNewsDto })
+  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateNewsDto })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Noticia nao encontrada" })
   @Put("/:id")
-  async update(@Param("id") id: string, @Body() payload: CreateOrUpdateRoomDto) {
+  async update(@Param("id") id: string, @Body() payload: CreateOrUpdateNewsDto) {
     return await this.newsService.update(Number(id), payload);
   }
 
@@ -62,7 +63,7 @@ export class NewsController {
     example: "1",
     required: true,
   })
-  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateRoomDto })
+  @ApiResponse({ status: HttpStatus.OK, type: CreateOrUpdateNewsDto })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Noticia nao encontrada" })
   @Delete("/:id")
   async delete(@Param("id") id: string) {

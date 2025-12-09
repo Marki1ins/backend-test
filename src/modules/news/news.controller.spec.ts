@@ -19,10 +19,13 @@ describe("NewsController", () => {
             create: jest
               .fn()
               .mockResolvedValue({ id: 1, titulo: "Notícia", descricao: "Descrição" }),
-            listAll: jest.fn().mockResolvedValue([
-              { id: 1, titulo: "Notícia 1", descricao: "Descrição 1" },
-              { id: 2, titulo: "Notícia 2", descricao: "Descrição 2" },
-            ]),
+            listAll: jest.fn().mockResolvedValue({
+              data: [{ id: 2, titulo: "string", descricao: "string" }],
+              total: 2,
+              page: 0,
+              perPage: 1,
+            }),
+
             listById: jest
               .fn()
               .mockResolvedValue({ id: 1, titulo: "Notícia", descricao: "Descrição" }),
@@ -68,15 +71,23 @@ describe("NewsController", () => {
   });
 
   describe("GET /noticia", () => {
-    it("should return a list of news", async () => {
+    it("should return a paginated list of news", async () => {
       return request(app.getHttpServer())
         .get("/noticia")
+        .query({
+          page: 0,
+          perPage: 1,
+          sortKey: "id",
+          sortDirection: "ASC",
+        })
         .expect(200)
         .expect((res) => {
-          expect(res.body).toEqual([
-            { id: 1, titulo: "Notícia 1", descricao: "Descrição 1" },
-            { id: 2, titulo: "Notícia 2", descricao: "Descrição 2" },
-          ]);
+          expect(res.body).toEqual({
+            data: [{ id: 2, titulo: "string", descricao: "string" }],
+            total: 2,
+            page: 0,
+            perPage: 1,
+          });
         });
     });
   });

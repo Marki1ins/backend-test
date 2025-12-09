@@ -17,7 +17,8 @@ describe("NewsService", () => {
       update: jest.fn().mockResolvedValue(mockNoticia),
       delete: jest.fn().mockResolvedValue(mockNoticia),
     },
-  };
+    paginate: jest.fn(),
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,11 +51,28 @@ describe("NewsService", () => {
     expect(prismaMock.noticia.create).toHaveBeenCalledWith({ data: payload });
   });
 
-  it("should list all news", async () => {
-    const result = await service.listAll();
+  it("should list all news (paginated)", async () => {
+    const query = {
+      page: 0,
+      perPage: 10,
+      sortKey: "id",
+      sortDirection: "DESC",
+      search: undefined,
+    };
 
-    expect(result).toEqual([mockNoticia]);
-    expect(prismaMock.noticia.findMany).toHaveBeenCalled();
+    const mockPaginated = {
+      data: [mockNoticia],
+      total: 1,
+      page: 0,
+      perPage: 10,
+    };
+
+    prismaMock.paginate.mockResolvedValue(mockPaginated);
+
+    const result = await service.listAll(query as any);
+
+    expect(result).toEqual(mockPaginated);
+    expect(prismaMock.paginate).toHaveBeenCalled();
   });
 
   it("should list a news by id", async () => {
