@@ -78,11 +78,12 @@ Este comando irá executar os testes automatizados configurados no projeto, gara
 
 ```plaintext
 src/
-├── news/
-│   ├── noticias.controller.ts  # Controlador para as rotas de "noticias"
-│   ├── noticias.service.ts     # Serviço que contém a lógica de negócios
-│   ├── noticias.module.ts      # Módulo que agrupa tudo relacionado à "noticia"
-└── app.module.ts               # Módulo raiz da aplicação
+├─ modules/
+│ ├── news/
+│     ├── noticias.controller.ts  # Controlador para as rotas de "noticias"
+│     ├── noticias.service.ts     # Serviço que contém a lógica de negócios
+│     ├── noticias.module.ts      # Módulo que agrupa tudo relacionado à "noticia"
+└─ app.module.ts                  # Módulo raiz da aplicação
 ```
 ### Justificativa da Estrutura de Pastas:
 
